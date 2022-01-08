@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from src.main import integral_image
+from src.haar_features.haar_like_features import integral_image
 
 
 class IntegralImageTest(unittest.TestCase):
