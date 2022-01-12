@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
+from src.haar_features import haar_like_features as hlf
 
 faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
              "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/train_data/faces"
@@ -20,7 +21,7 @@ def load_images_from_folder(folder):
     return np.array(images)
 
 
-def get_train_dataset(faces, non_faces):
+def get_train_images_dataset(faces, non_faces):
     faces_images = load_images_from_folder(faces_path)
     non_faces_images = load_images_from_folder(non_faces_path)
 
@@ -29,6 +30,18 @@ def get_train_dataset(faces, non_faces):
 
     return samples, labels
 
+
+def get_train_features_dataset(X, y):
+    features = []
+
+    for img in X:
+        features.append(hlf.get_rectangular_features_24(img))
+
+    return np.array(features)
+
+
+def train_features_classifiers(X, y):
+    pass
 
 
 
