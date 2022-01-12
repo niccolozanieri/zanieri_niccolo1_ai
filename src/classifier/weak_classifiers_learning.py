@@ -3,6 +3,7 @@ import os
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from src.haar_features import haar_like_features as hlf
+from sklearn.tree import export_text
 
 faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
              "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/train_data/faces"
@@ -41,7 +42,17 @@ def get_train_features_dataset(X, y):
 
 
 def train_features_classifiers(X, y):
-    pass
+    features = get_train_features_dataset(X, y)
+    classifiers = []
+    for i in range(0, features.shape[1]):
+        samples = np.zeros(features.shape[0])
+        for j in range(0, features.shape[0]):
+            samples[j] = features[j, i]
+        samples = samples.reshape(-1, 1)
+        dt = DecisionTreeClassifier(max_depth=1)
+        dt = dt.fit(samples, y)
+        classifiers.append(dt)
 
+    return classifiers
 
 
