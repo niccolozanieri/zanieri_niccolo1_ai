@@ -104,6 +104,8 @@ def get_rectangular_features_24(src_image):
 
     features_num = 5
     features_shape = np.array([[1, 2], [2, 1], [1, 3], [3, 1], [2, 2]])
+    # features_num = 1
+    # features_shape = np.array([[1, 2]])
     frame_size = 24
     features = []
     ii = integral_image(src_image)
