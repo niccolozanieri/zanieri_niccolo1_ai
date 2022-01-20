@@ -1,10 +1,7 @@
 from classifier import weak_classifiers_learning as wcl
 from classifier import vjbasic_classifier as vjbc
-from haar_features import haar_like_features as hlf
 from timeit import default_timer as timer
-import numpy as np
-import cv2
-import os
+
 
 start_test = timer()
 test_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \

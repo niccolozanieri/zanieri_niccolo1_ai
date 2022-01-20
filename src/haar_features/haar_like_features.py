@@ -24,6 +24,20 @@ def integral_image(src_image):
     return ii
 
 
+def get_image_variance(src_image):
+    h = src_image.shape[0]
+    w = src_image.shape[1]
+    src_image = np.array(src_image, dtype=np.uint)
+    src_image_square = src_image ** 2
+    ii = integral_image(src_image)
+    ii_square = integral_image(src_image_square)
+    mean = ii[h - 1, w - 1] / (h * w)
+    mean_square = ii_square[h - 1, w - 1] / (h * w)
+    variance = mean_square - mean ** 2
+
+    return variance
+
+
 def get_grey_sum(ii, size_x, size_y, w, h, x, y):
     shape = (size_x, size_y)
 
