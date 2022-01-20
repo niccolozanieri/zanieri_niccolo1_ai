@@ -23,8 +23,8 @@ def load_images_from_folder(folder):
 
 
 def get_train_images_dataset(faces, non_faces):
-    faces_images = load_images_from_folder(faces_path)
-    non_faces_images = load_images_from_folder(non_faces_path)
+    faces_images = load_images_from_folder(faces)
+    non_faces_images = load_images_from_folder(non_faces)
 
     samples = np.concatenate((faces_images, non_faces_images))
     labels = np.concatenate((np.ones(faces_images.shape[0]), np.zeros(non_faces_images.shape[0])))
@@ -32,7 +32,7 @@ def get_train_images_dataset(faces, non_faces):
     return samples, labels
 
 
-def get_train_features_dataset(X, y):
+def get_train_features_dataset(X):
     features = []
 
     for img in X:
@@ -42,7 +42,7 @@ def get_train_features_dataset(X, y):
 
 
 def train_features_classifiers(X, y):
-    features = get_train_features_dataset(X, y)
+    features = get_train_features_dataset(X)
     classifiers = []
     for i in range(0, features.shape[1]):
         samples = np.zeros(features.shape[0])
@@ -53,6 +53,5 @@ def train_features_classifiers(X, y):
         dt = dt.fit(samples, y)
         classifiers.append(dt)
 
-    return classifiers
-
+    return classifiers, features
 
