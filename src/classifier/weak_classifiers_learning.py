@@ -32,10 +32,29 @@ def get_train_images_dataset(faces, non_faces):
     return samples, labels
 
 
-def get_train_features_dataset(X):
+def get_image_variance(src_image):
+    h = src_image.shape[0]
+    w = src_image.shape[1]
+    src_image = np.array(src_image, dtype=np.uint)
+    src_image_square = src_image ** 2
+    ii = hlf.integral_image(src_image)
+    ii_square = hlf.integral_image(src_image_square)
+    mean = ii[h - 1, w - 1] / (h * w)
+    mean_square = ii_square[h - 1, w - 1] / (h * w)
+    variance = mean_square - mean ** 2
+
+    return variance
+
+
+def variance_normalize(images, features):
+    for i, img in enumerate(images):
+        features[i] = features[i] / get_image_variance(img)
+
+
+def get_train_features_dataset(images):
     features = []
 
-    for img in X:
+    for img in images:
         features.append(hlf.get_rectangular_features_24(img))
 
     return np.array(features)
