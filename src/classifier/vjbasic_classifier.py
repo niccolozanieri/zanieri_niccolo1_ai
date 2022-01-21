@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from .weak_classifiers_learning import train_features_classifiers, get_train_features_dataset
+import src.classifier.weak_classifiers_learning as wcl
 import sys
 
 
@@ -16,7 +16,7 @@ class VJBasicClassifier:
         w = np.ones(n)
         self.weak_learners = []
         self.alphas = []
-        (classifiers_array, features_array) = train_features_classifiers(X, y)
+        (classifiers_array, features_array) = wcl.train_features_classifiers(X, y)
 
         for i in range(0, m):
             w[i] = w[i] / (2 * m)
@@ -50,7 +50,7 @@ class VJBasicClassifier:
         if len(self.alphas) == 0 or len(self.weak_learners) == 0:
             raise RuntimeError("can't apply classifier before fitting it.")
 
-        features_array = get_train_features_dataset(X)
+        features_array = wcl.get_train_features_dataset(X)
         n = X.shape[0]
         leaves = np.zeros(n)
         for i in range(0, n):

@@ -97,6 +97,19 @@ def get_rectangular_feature(ii, size_x, size_y, w, h, x, y):
     return grey_sum - white_sum
 
 
+def get_image_variance(src_image, ii):
+    h = src_image.shape[0]
+    w = src_image.shape[1]
+    src_image = np.array(src_image, dtype=np.uint)
+    src_image_square = src_image ** 2
+    ii_square = integral_image(src_image_square)
+    mean = ii[h - 1, w - 1] / (h * w)
+    mean_square = ii_square[h - 1, w - 1] / (h * w)
+    variance = mean_square - mean ** 2
+
+    return variance
+
+
 # https://stackoverflow.com/questions/1707620/viola-jones-face-detection-claims-180k-features
 def get_rectangular_features_24(src_image):
     if src_image.shape[0] != 24 or src_image.shape[1] != 24:
@@ -115,12 +128,14 @@ def get_rectangular_features_24(src_image):
         size_y = features_shape[i, 1]
 
         # each size (multiples of basic shapes)
-        for w in range(size_x, frame_size + 1, size_x):
-            for h in range(size_y, frame_size + 1, size_y):
+        for w in range(size_x, frame_size + 1 - 20 * size_x, size_x):
+            for h in range(size_y, frame_size + 1 - 10 * size_y, size_y):
 
                 # each possible position given size
                 for x in range(0, frame_size - w + 1):
                     for y in range(0, frame_size - h + 1):
                         features.append(get_rectangular_feature(ii, size_x, size_y, w, h, x, y))
 
-    return features
+    variance = get_image_variance(src_image, ii)
+
+    return np.array(features) / variance
