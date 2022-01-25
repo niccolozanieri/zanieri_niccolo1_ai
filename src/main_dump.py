@@ -12,7 +12,7 @@ test_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Driv
 test_non_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
              "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/test_data/non_faces"
 
-(samples, labels) = wcl.get_train_images_dataset(wcl.faces_path, wcl.non_faces_path)
+(samples, labels) = wcl.get_images_dataset(wcl.faces_path, wcl.non_faces_path)
 classifier = cc.ClassifiersCascade(5)
 m = wcl.load_images_from_folder(wcl.faces_path).shape[0]
 l = wcl.load_images_from_folder(wcl.non_faces_path).shape[0]
@@ -20,10 +20,7 @@ classifier.fit(samples, labels)
 with open('pickled_classifiers/classifiers_cascade.pickle', 'wb') as output_file:
     pickle.dump(classifier, output_file, protocol=pickle.HIGHEST_PROTOCOL)
 
-# with open('pickled_classifiers/classifiers_cascade.pickle', 'rb') as input_file:
-#     classifier = pickle.load(input_file)
-
-(test_samples, test_labels) = wcl.get_train_images_dataset(test_faces_path, test_non_faces_path)
+(test_samples, test_labels) = wcl.get_images_dataset(test_faces_path, test_non_faces_path)
 pred = classifier.apply(test_samples)
 
 end_test = timer()

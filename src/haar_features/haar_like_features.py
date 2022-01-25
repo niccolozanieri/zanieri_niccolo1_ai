@@ -119,8 +119,6 @@ def get_rectangular_features_24(src_image):
 
     features_num = 5
     features_shape = np.array([[1, 2], [2, 1], [1, 3], [3, 1], [2, 2]])
-    # features_num = 1
-    # features_shape = np.array([[1, 2]])
     frame_size = 24
     features = []
     ii = integral_image(src_image)
@@ -130,8 +128,8 @@ def get_rectangular_features_24(src_image):
         size_y = features_shape[i, 1]
 
         # each size (multiples of basic shapes)
-        for w in range(size_x, frame_size + 1 - 22 * size_x, size_x):
-            for h in range(size_y, frame_size + 1 - 11 * size_y, size_y):
+        for w in range(size_x, frame_size + 1, size_x):
+            for h in range(size_y, frame_size + 1, size_y):
 
                 # each possible position given size
                 for x in range(0, frame_size - w + 1):

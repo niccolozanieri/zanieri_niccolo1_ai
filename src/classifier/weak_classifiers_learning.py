@@ -22,7 +22,7 @@ def load_images_from_folder(folder):
     return np.array(images)
 
 
-def get_train_images_dataset(faces, non_faces):
+def get_images_dataset(faces, non_faces):
     faces_images = load_images_from_folder(faces)
     non_faces_images = load_images_from_folder(non_faces)
 

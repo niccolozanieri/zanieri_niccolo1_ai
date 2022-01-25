@@ -2,6 +2,7 @@ import numpy as np
 import math
 import src.classifier.weak_classifiers_learning as wcl
 import sys
+import numpy.ma as ma
 
 
 class VJBasicClassifier:
@@ -11,7 +12,7 @@ class VJBasicClassifier:
         self.wl_feature_indexes = []
         self.alphas = []
 
-    def fit(self, X, y, m, l):
+    def fit(self, X, y, m, l):   # TODO: add indexes of already used features to check if it improves performance?
         n = X.shape[0]
         w = np.ones(n)
         self.weak_learners = []
@@ -34,7 +35,9 @@ class VJBasicClassifier:
                     e = abs(classifiers_array[j].apply([[features_array[i, j]]])[0] - 1 - y[i])
                     err_array[j] += w[i] * e
 
-            ht_f_index = np.argmin(err_array)
+            err_array = self.mask_errors_array(err_array)
+            err = err_array[~err_array.mask]
+            ht_f_index = np.argmin(err_array[~err_array.mask])
             ht = classifiers_array[ht_f_index]
             et = max(err_array[ht_f_index], sys.float_info.min)
             bt = et / (1 - et)
@@ -67,6 +70,13 @@ class VJBasicClassifier:
                 leaves[i] = 0
 
         return leaves
+
+    def mask_errors_array(self, array):
+        mask = np.zeros(array.shape[0])
+        for index in self.wl_feature_indexes:
+            mask[index] = 1
+        return ma.array(array, mask=mask, fill_value=sys.float_info.max)
+
 
 
 

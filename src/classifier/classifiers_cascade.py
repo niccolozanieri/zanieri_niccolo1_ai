@@ -6,8 +6,7 @@ import numpy as np
 class ClassifiersCascade:
     def __init__(self, n_layers):
         self.n_layers = n_layers
-        # self.features_per_layer = [1, 10, 25, 25, 50]
-        self.features_per_layer = [1, 1, 1, 1, 1]
+        self.features_per_layer = [1, 10, 25, 25, 50]
 
         for i in range(0, n_layers - 5):
             self.features_per_layer.append(50 + i)
