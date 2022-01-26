@@ -29,8 +29,9 @@ class ClassifiersCascade:
     def apply(self, X):
         n = X.shape[0]
         leaves = np.ones(n)
+        features_array = wcl.get__features_dataset(X)
         for classifier in self.classifiers:
-            leaves = leaves * classifier.apply(X)
+            leaves = leaves * classifier.apply(features_array)
             if np.equal(leaves, np.zeros(n)).all():
                 return leaves
 

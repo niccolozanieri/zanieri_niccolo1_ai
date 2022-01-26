@@ -48,19 +48,18 @@ class VJBasicClassifier:
         end_time = timer()
         print(f'One feature classifier AB: {end_time - start_time} s')
 
-    def apply(self, X):
+    def apply(self, features_array):
         if len(self.alphas) == 0 or len(self.weak_learners) == 0:
             raise RuntimeError("can't apply classifier before fitting it.")
 
-        X = wcl.get_train_features_dataset(X)
-        n = X.shape[0]
+        n = features_array.shape[0]
         leaves = np.zeros(n)
         for i in range(0, n):
             classif_sum = 0
             alphas_sum = 0
             for t in range(0, self.n_estimators):
                 f_index = self.wl_feature_indexes[t]
-                classif_sum += self.alphas[t] * (self.weak_learners[t].apply([[X[i, f_index]]])[0] - 1)
+                classif_sum += self.alphas[t] * (self.weak_learners[t].apply([[features_array[i, f_index]]])[0] - 1)
                 alphas_sum += self.alphas[t]
 
             if classif_sum >= 0.5 * alphas_sum:

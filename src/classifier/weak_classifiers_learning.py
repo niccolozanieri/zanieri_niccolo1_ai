@@ -32,7 +32,7 @@ def get_images_dataset(faces, non_faces):
     return samples, labels
 
 
-def get_train_features_dataset(images):
+def get__features_dataset(images):
     features = []
 
     for img in images:
@@ -42,7 +42,7 @@ def get_train_features_dataset(images):
 
 
 def train_features_classifiers(X, y):
-    features = get_train_features_dataset(X)
+    features = get__features_dataset(X)
     classifiers = []
     for i in range(0, features.shape[1]):
         samples = np.zeros(features.shape[0])
