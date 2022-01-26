@@ -13,7 +13,7 @@ test_non_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google 
              "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/test_data/non_faces"
 
 (samples, labels) = wcl.get_images_dataset(wcl.faces_path, wcl.non_faces_path)
-classifier = cc.ClassifiersCascade(5)
+classifier = cc.ClassifiersCascade(1)
 m = wcl.load_images_from_folder(wcl.faces_path).shape[0]
 l = wcl.load_images_from_folder(wcl.non_faces_path).shape[0]
 classifier.fit(samples, labels)

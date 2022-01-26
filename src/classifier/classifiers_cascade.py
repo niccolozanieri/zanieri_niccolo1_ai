@@ -6,7 +6,7 @@ import numpy as np
 class ClassifiersCascade:
     def __init__(self, n_layers):
         self.n_layers = n_layers
-        self.features_per_layer = [1, 10, 25, 25, 50]
+        self.features_per_layer = [2, 1, 1, 1, 1]
 
         for i in range(0, n_layers - 5):
             self.features_per_layer.append(50 + i)
@@ -16,9 +16,11 @@ class ClassifiersCascade:
     def fit(self, X, y):
         m = wcl.load_images_from_folder(wcl.faces_path).shape[0]
         l = wcl.load_images_from_folder(wcl.non_faces_path).shape[0]
+        (classif_apply_results, classifiers_list, features_array) = self.get_classif_apply_results(X, y)
+
         for n in self.features_per_layer:
             classifier = vjbc.VJBasicClassifier(n)
-            classifier.fit(X, y, m, l)
+            classifier.fit(X, y, m, l, classif_apply_results, classifiers_list, features_array)
             self.classifiers.append(classifier)
 
     def add_classifier(self, classifier):
@@ -33,3 +35,14 @@ class ClassifiersCascade:
                 return leaves
 
         return leaves
+
+    def get_classif_apply_results(self, X, y):
+        n = X.shape[0]
+        (classifiers_list, features_array) = wcl.train_features_classifiers(X, y)
+
+        classif_apply_results = np.zeros((len(classifiers_list), n))
+        for j in range(0, len(classifiers_list)):
+            for i in range(0, n):
+                classif_apply_results[j, i] = classifiers_list[j].apply([[features_array[i, j]]])[0]
+
+        return classif_apply_results, classifiers_list, features_array
