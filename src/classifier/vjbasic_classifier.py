@@ -13,25 +13,26 @@ class VJBasicClassifier:
         self.wl_feature_indexes = []
         self.alphas = []
 
-    # TODO: add indexes of already used features to check if it improves performance?
     def fit(self, X, y, m, l, classif_apply_results, classifiers_list, features_array):
         n = X.shape[0]
         w = np.ones(n)
         self.weak_learners = []
         self.alphas = []
-        n_classifiers = classif_apply_results.shape[0]
-        
+
+        y_mat = np.zeros((classif_apply_results.shape[0], classif_apply_results.shape[1]))
+        for j in range(0, y_mat.shape[1]):
+            y_mat[:, j] = y[j]
+
+        id_mat = np.ones((y_mat.shape[0], y_mat.shape[1]))
+
         start_time = timer()
         for t in range(0, self.n_estimators):
             w_sum = np.sum(w, 0)
             for i in range(0, m + l):
                 w[i] = w[i] / w_sum
 
-            err_array = np.zeros(n_classifiers)
-            for j in range(0, n_classifiers):
-                for i in range(0, n):
-                    e = abs(classif_apply_results[j, i] - 1 - y[i])
-                    err_array[j] += w[i] * e
+            e = np.abs(classif_apply_results - id_mat - y_mat)
+            err_array = np.matmul(e, w)
 
             err_array = self.mask_errors_array(err_array)
             ht_f_index = np.argmin(err_array[~err_array.mask])
@@ -46,7 +47,7 @@ class VJBasicClassifier:
             self.wl_feature_indexes.append(ht_f_index)
             self.alphas.append(math.log(1 / bt))
         end_time = timer()
-        print(f'One feature classifier AB: {end_time - start_time} s')
+        print(f'Classifier AB: {end_time - start_time} s')
 
     def apply(self, features_array):
         if len(self.alphas) == 0 or len(self.weak_learners) == 0:

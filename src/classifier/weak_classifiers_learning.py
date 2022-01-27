@@ -26,7 +26,12 @@ def get_images_dataset(faces, non_faces):
     faces_images = load_images_from_folder(faces)
     non_faces_images = load_images_from_folder(non_faces)
 
-    samples = np.concatenate((faces_images, non_faces_images))
+    if non_faces_images.shape[0] == 0:
+        samples = faces_images
+    elif faces_images.shape[0] == 0:
+        samples = non_faces_images
+    else:
+        samples = np.concatenate((faces_images, non_faces_images))
     labels = np.concatenate((np.ones(faces_images.shape[0]), np.zeros(non_faces_images.shape[0])))
 
     return samples, labels
