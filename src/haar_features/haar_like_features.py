@@ -84,7 +84,7 @@ def get_white_sum(ii, size_x, size_y, w, h, x, y):
         white_sum_1_minus = ii[y - 1, x + int(w / 2) - 1] + ii[y + int(h / 2) - 1, x - 1]
         white_sum_2_plus = ii[y + h - 1, x + w - 1] + ii[y + int(h / 2) - 1, x + int(w / 2) - 1]
         white_sum_2_minus = ii[y + int(h / 2) - 1, x + w - 1] + ii[y + h - 1, x + int(w / 2) - 1]
-        white_sum = white_sum_1_plus + white_sum_2_plus - white_sum_1_minus - white_sum_1_minus
+        white_sum = white_sum_1_plus + white_sum_2_plus - white_sum_1_minus - white_sum_2_minus
 
     return white_sum
 
