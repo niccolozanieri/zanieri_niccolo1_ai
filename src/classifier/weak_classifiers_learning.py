@@ -37,7 +37,7 @@ def get_images_dataset(faces, non_faces):
     return samples, labels
 
 
-def get__features_dataset(images):
+def get_features_dataset(images):
     features = []
 
     for img in images:
@@ -47,12 +47,12 @@ def get__features_dataset(images):
 
 
 def train_features_classifiers(X, y):
-    features = get__features_dataset(X)
+    features = get_features_dataset(X)
     classifiers = []
     for i in range(0, features.shape[1]):
         samples = np.zeros(features.shape[0])
         for j in range(0, features.shape[0]):
-            samples[j] = features[j, i]
+            samples[j] = features[j, i].value
         samples = samples.reshape(-1, 1)
         dt = DecisionTreeClassifier(max_depth=1)
         dt = dt.fit(samples, y)

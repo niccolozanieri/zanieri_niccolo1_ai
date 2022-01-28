@@ -142,6 +142,6 @@ def get_rectangular_features_24(src_image):
                 for x in range(0, frame_size - w + 1):
                     for y in range(0, frame_size - h + 1):
                         value = get_rectangular_feature(ii, size_x, size_y, w, h, x, y) / variance
-                        features.append(HaarFeature(x, y, h, w, value))
+                        features.append(HaarFeature(size_x, size_y, x, y, h, w, value))
 
     return features

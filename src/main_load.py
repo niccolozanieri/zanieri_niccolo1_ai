@@ -4,8 +4,6 @@ from timeit import default_timer as timer
 from classifier import classifiers_cascade as cc
 import pickle
 
-start_test = timer()
-
 test_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
              "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/test_data/faces"
 
@@ -17,11 +15,12 @@ with open('pickled_classifiers/classifiers_cascade.pickle', 'rb') as input_file:
     classifier = pickle.load(input_file)
 
 (test_samples, test_labels) = wcl.get_images_dataset(test_faces_path, test_non_faces_path)
-pred = classifier.apply(test_samples)
 
+start_test = timer()
+pred = classifier.apply(test_samples)
 end_test = timer()
 
-print(f'Train + classification: {end_test - start_test} s')
+print(f'Apply: {end_test - start_test} s')
 miscl = 0
 for i in range(0, test_samples.shape[0]):
     if test_labels[i] != pred[i]:
