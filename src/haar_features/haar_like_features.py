@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import warnings
+from src.haar_features.haar_feature import HaarFeature
 warnings.filterwarnings("error")
 
 
@@ -89,12 +90,15 @@ def get_white_sum(ii, size_x, size_y, w, h, x, y):
     return white_sum
 
 
-def get_rectangular_feature(ii, size_x, size_y, w, h, x, y):
-    shape = (size_x, size_y)
+def get_rectangular_feature(ii, size_x=1, size_y=1, w=1, h=1, x=0, y=0, hf=None):
     mod_ii = np.zeros((25, 25))
     mod_ii[1:25, 1:25] = np.copy(ii)
-    grey_sum = get_grey_sum(mod_ii, size_x, size_y, w, h, x + 1, y + 1)
-    white_sum = get_white_sum(mod_ii, size_x, size_y, w, h, x + 1, y + 1)
+    if hf is None:
+        grey_sum = get_grey_sum(mod_ii, size_x, size_y, w, h, x + 1, y + 1)
+        white_sum = get_white_sum(mod_ii, size_x, size_y, w, h, x + 1, y + 1)
+    else:
+        grey_sum = get_grey_sum(mod_ii, hf.size_x, hf.size_y, hf.w, hf.h, hf.x + 1, hf.y + 1)
+        white_sum = get_white_sum(mod_ii, hf.size_x, hf.size_y, hf.w, hf.h, hf.x + 1, hf.y + 1)
 
     return grey_sum - white_sum
 
@@ -122,24 +126,22 @@ def get_rectangular_features_24(src_image):
     frame_size = 24
     features = []
     ii = integral_image(src_image)
+    variance = get_image_variance(src_image, ii)
+    if variance == 0:
+        variance = 1
 
     for i in range(0, features_num):
         size_x = features_shape[i, 0]
         size_y = features_shape[i, 1]
 
         # each size (multiples of basic shapes)
-        for w in range(size_x, frame_size + 1, size_x):
-            for h in range(size_y, frame_size + 1, size_y):
+        for w in range(size_x, frame_size + 1 - 23 * size_x, size_x):
+            for h in range(size_y, frame_size + 1 - 11 * size_y, size_y):
 
                 # each possible position given size
                 for x in range(0, frame_size - w + 1):
                     for y in range(0, frame_size - h + 1):
-                        features.append(get_rectangular_feature(ii, size_x, size_y, w, h, x, y))
+                        value = get_rectangular_feature(ii, size_x, size_y, w, h, x, y) / variance
+                        features.append(HaarFeature(x, y, h, w, value))
 
-    variance = get_image_variance(src_image, ii)
-    if variance == 0:
-        result = np.array(features)
-    else:
-        result = np.array(features) / variance
-
-    return result
+    return features
