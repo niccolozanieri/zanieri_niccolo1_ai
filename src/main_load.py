@@ -1,7 +1,5 @@
 from classifier import weak_classifiers_learning as wcl
-from classifier import vjbasic_classifier as vjbc
 from timeit import default_timer as timer
-from classifier import classifiers_cascade as cc
 import pickle
 
 test_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \

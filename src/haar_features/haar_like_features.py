@@ -135,8 +135,8 @@ def get_rectangular_features_24(src_image):
         size_y = features_shape[i, 1]
 
         # each size (multiples of basic shapes)
-        for w in range(size_x, frame_size + 1 - 23 * size_x, size_x):
-            for h in range(size_y, frame_size + 1 - 11 * size_y, size_y):
+        for w in range(size_x, frame_size + 1, size_x):
+            for h in range(size_y, frame_size + 1, size_y):
 
                 # each possible position given size
                 for x in range(0, frame_size - w + 1):
