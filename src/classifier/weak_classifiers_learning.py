@@ -3,13 +3,10 @@ import os
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from src.haar_features import haar_like_features as hlf
-from sklearn.tree import export_text
 
-faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
-             "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/train_data/faces"
+faces_path = "../../data/train_data/faces"
 
-non_faces_path = "/home/niccolo/Insync/niccolo.zanieri.13@gmail.com/Google Drive/School/" \
-                 "University/Terzo_Anno/Intelligenza Artificiale/Esame/data/train_data/non_faces"
+non_faces_path = "../../data/train_data/non_faces"
 
 
 # https://stackoverflow.com/questions/30230592/loading-all-images-using-imread-from-a-given-folder

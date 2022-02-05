@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 import warnings
 from src.haar_features.haar_feature import HaarFeature

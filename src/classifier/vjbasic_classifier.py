@@ -1,17 +1,13 @@
 import numpy as np
 import math
-import src.classifier.weak_classifiers_learning as wcl
 import src.haar_features.haar_like_features as hlf
 import sys
-import numpy.ma as ma
-from timeit import default_timer as timer
 
 
 class VJBasicClassifier:
     def __init__(self, n_estimators):
         self.n_estimators = n_estimators
         self.weak_learners = []
-        self.wl_feature_indexes = []
         self.wl_features = []
         self.alphas = []
 
@@ -25,32 +21,30 @@ class VJBasicClassifier:
         for j in range(0, y_mat.shape[1]):
             y_mat[:, j] = y[j]
 
-        id_mat = np.ones((y_mat.shape[0], y_mat.shape[1]))
+        for i in range(0, m):
+            w[i] = w[i] / (2 * m)
+        for j in range(0, l):
+            w[m + j] = w[m + j] / (2 * l)
 
-        start_time = timer()
         for t in range(0, self.n_estimators):
             w_sum = np.sum(w, 0)
             for i in range(0, m + l):
                 w[i] = w[i] / w_sum
 
-            e = np.abs(classif_apply_results - id_mat - y_mat)
+            e = np.abs(classif_apply_results - y_mat)
             err_array = np.matmul(e, w)
 
-            err_array = self.mask_errors_array(err_array)
-            ht_f_index = np.argmin(err_array[~err_array.mask])
+            ht_f_index = np.argmin(err_array)
             ht = classifiers_list[ht_f_index]
             et = max(err_array[ht_f_index], sys.float_info.min)
             bt = et / (1 - et)
             for i in range(0, m + l):
-                e = abs(ht.apply([[features_array[i, ht_f_index].value]])[0] - 1 - y[i])
+                e = abs(ht.predict([[features_array[i, ht_f_index].value]])[0] - y[i])
                 w[i] = w[i] * pow(bt, 1 - e)
 
             self.weak_learners.append(ht)
             self.wl_features.append(features_array[0, ht_f_index])
-            self.wl_feature_indexes.append(ht_f_index)
             self.alphas.append(math.log(1 / bt))
-        end_time = timer()
-        print(f'Classifier AB: {end_time - start_time} s')
 
     def apply(self, X):
         if len(self.alphas) == 0 or len(self.weak_learners) == 0:
@@ -65,7 +59,7 @@ class VJBasicClassifier:
                 ii = hlf.integral_image(X[i])
                 feature = self.wl_features[t]
                 f_value = hlf.get_rectangular_feature(ii, hf=feature)
-                classif_sum += self.alphas[t] * (self.weak_learners[t].apply([[f_value]])[0] - 1)
+                classif_sum += self.alphas[t] * (self.weak_learners[t].predict([[f_value]])[0])
                 alphas_sum += self.alphas[t]
 
             if classif_sum >= 0.5 * alphas_sum:
@@ -74,12 +68,6 @@ class VJBasicClassifier:
                 leaves[i] = 0
 
         return leaves
-
-    def mask_errors_array(self, array):
-        mask = np.zeros(array.shape[0])
-        for index in self.wl_feature_indexes:
-            mask[index] = 1
-        return ma.array(array, mask=mask, fill_value=sys.float_info.max)
 
 
 
