@@ -13,3 +13,17 @@ class IntegralImageTest(unittest.TestCase):
 
         self.assertEqual(True, np.array_equal(ii, expected_ii))
 
+    def test_image_sum_ii(self):
+        test_image = np.array([[5, 2, 5, 2], [3, 6, 3, 6], [5, 2, 5, 2], [3, 6, 3, 6]])
+        pixels_sum = 0
+        h = test_image.shape[0]
+        w = test_image.shape[1]
+        for i in range(0, h):
+            for j in range(0, w):
+                pixels_sum += test_image[i, j]
+
+        ii = integral_image(test_image)
+
+        self.assertEqual(pixels_sum, ii[h - 1, w - 1])
+
+
